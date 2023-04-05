@@ -1,29 +1,28 @@
 #!/usr/bin/env bash
-
-# Update package lists and install HAproxy
-apt-get update
+# Create a script to install and configure HAProxy on lb-01 server
+# Configure HAProxy to send traffic to web-01 and web-02 servers
+# Distribute requests using a roundrobin algorithm
+# Make sure that HAProxy can be managed via an init script
+# Install and configure HAproxy on my lb-01 server.
+sudo apt-get -y update
 apt-get -y install haproxy
 
-# Backup the original HAproxy configuration file
-cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
+# edit config file
+server_config=\
+"
+frontend  mondli-frontend
+        bind *:80
+        mode http
+        default_backend mondli-backend
+backend mondli-backend
+        balance roundrobin
+        server 90966-web-01 54.162.46.10:80 check
+        server 90966-web-02 54.146.92.4:80 check
+"
+echo "$server_config" | sudo tee -a /etc/haproxy/haproxy.cfg
 
-# Write new HAproxy configuration file
-cat > /etc/haproxy/haproxy.cfg << EOF
-frontend http-in
-    bind *:80
-    mode http
-    default_backend web-backend
+# enable haproxy to be started by init script
 
-backend web-backend
-    mode http
-    balance roundrobin
-    server web-01 90966-web-01-web-01:80 check
-    server web-02 90966-web-02-web-02:80 check
-EOF
+echo "ENABLED=1" | sudo tee -a /etc/default/haproxy
 
-# Restart HAproxy service
-systemctl restart haproxy
-
-# Make sure HAproxy is enabled on startup
-systemctl enable haproxy
-
+sudo service haproxy restart
