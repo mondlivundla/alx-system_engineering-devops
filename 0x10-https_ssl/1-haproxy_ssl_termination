@@ -19,7 +19,7 @@ defaults
     errorfile 504 /etc/haproxy/errors/504.http
 
 frontend www-frontend
-    bind *:443 ssl crt /etc/letsencrypt/live/yourdomainnow.tech/fullchain.pem
+    bind *:443 ssl crt /etc/letsencrypt/live/www.yourdomainnow.tech/fullchain.pem
     reqadd X-Forwarded-Proto:\ https
     default_backend www-backend
 
@@ -28,33 +28,5 @@ backend www-backend
     server 90966-web-01 54.162.46.10:80 check
     http-request set-header X-Forwarded-Port %[dst_port]
     http-request add-header X-Forwarded-Proto https if { ssl_fc }
-frontend http-in
-    bind *:80
-    mode http
-    default_backend web-backend
 
-backend web-backend
-    mode http
-    balance roundrobin
-    server web-01 90966-web-01-web-01:80 check
-    server web-02 90966-web-02-web-02:80 check
-
-frontend  mondli-frontend
-        bind *:80
-        mode http
-        default_backend yonas-backend
-backend mondli-backend
-        balance roundrobin
-        server 90966-web-01 54.162.46.10:80 check
-        server 90966-web-02 54.146.92.4:80 check
-
-
-frontend  mondli-frontend
-        bind *:80
-        mode http
-        default_backend mondli-backend
-backend mondli-backend
-        balance roundrobin
-        server 90966-web-01 54.162.46.10:80 check
-        server 90966-web-02 54.146.92.4:80 check
 
