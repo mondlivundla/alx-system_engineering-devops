@@ -41,4 +41,5 @@ relay_log = /var/lib/mysql/mysql-relay-bin
 read_only = 1
 master_info_repository = TABLE
 relay_log_info_repository = TABLE
+[mysqldump]
 max_allowed_packet=64M
