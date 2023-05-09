@@ -84,44 +84,4 @@ def count_words(subreddit, word_list, after="", count=[]):
 
         else:
 
-            count_words(subreddit, word_list, after, count)
-
-Footer
-
-© 2023 GitHub, Inc.
-
-Footer navigation
-
-Terms
-
-Privacy
-
-Security
-
-Status
-
-Docs
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-            
-
-   
+            count_words(subreddit, word_list, after, count)   
